@@ -10,7 +10,7 @@ nextButton.addEventListener("click", () => {
   selectNext();
 });
 
-// Targets html
+// HTML Targets 
 
 const questionContainerElement = document.getElementById("question-container");
 const questionElement = questionContainerElement;
