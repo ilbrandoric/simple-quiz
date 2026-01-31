@@ -21,7 +21,7 @@ body {
   height: 100vh;
   display: flex;
   justify-content: center; /* main axis (X) */
-  align-items: center;     /* cross axis (Y) */
+  align-items: center; /* cross axis (Y) */
   background-color: #121212;
   color: #e0e0e0;
 }
@@ -29,7 +29,7 @@ body {
 /* Golden rectangle container */
 .container {
   width: 640px;
-  height: 396px; /* Golden ratio proportion */
+  min-height: 396px; 
   background-color: #1e1e1e;
   border-radius: 12px;
   padding: 24px;
@@ -40,13 +40,18 @@ body {
   justify-content: flex-start; /* default quiz layout */
 }
 
+
+
 /* Start state: center Start button vertically */
 .container.start-state {
   justify-content: center;
+  height: 466px;
 }
 
 /* Question box styling */
 #question-container {
+  width: 100%;
+  max-width: 100%;
   margin: 0;
   padding: 16px;
   border-radius: 8px;
@@ -54,6 +59,7 @@ body {
   font-size: 1.25rem;
   line-height: 1.4;
   text-align: center;
+  overflow-wrap: break-word;
 }
 
 /* Answer buttons grid */
@@ -85,7 +91,9 @@ body {
 .controls {
   display: flex;
   gap: 12px;
+  margin-top: auto;
 }
+
 
 /* Center Start button in start state */
 .container.start-state .controls {
@@ -114,7 +122,7 @@ body {
 
 .controls .btn:hover {
   background-color: #4a4a4a;
-}
+} 
 
 /* Utility */
 .hidden {
