@@ -29,8 +29,17 @@ function startGame() {
   // Resets the value so if game is a restart it start 'clean' with no bugs
   currentQuestionIndex = 0;
 
-  // 'Cheap' trick to randomize questions and STORE in shuffledQuestions array
-  shuffledQuestions = quizQuestions.sort(() => Math.random() - 0.5); //gives a random number between -0.5 and +0.5
+  // Creates a new array of objects 'shuffledQuestions' does NOT mutate quizQuestions original
+  // You shuffle the answer options 'inside' and then the entire question deck is itself shuffled
+
+  shuffledQuestions = quizQuestions
+    .map((question) => {
+      return {
+        ...question,
+        options: shuffleArray(question.options), // Shuffle answers happens here
+      };
+    })
+    .sort(() => Math.random() - 0.5);
 
   showQuestion();
 }
@@ -42,6 +51,8 @@ function showQuestion() {
 
   const currentQuestion = shuffledQuestions[currentQuestionIndex];
   questionContainer.innerText = currentQuestion.question;
+
+  shuffledAnswers = currentQuestion;
 
   // Loops inside each questions answer options and displays it
   currentQuestion.options.forEach((option) => {
@@ -111,6 +122,15 @@ function resetState() {
   while (answerButtons.firstChild) {
     answerButtons.removeChild(answerButtons.firstChild);
   }
+}
+
+// Shuffler logic
+
+function shuffleArray(array) {
+  return array
+    .map((value) => ({ value, sort: Math.random() }))
+    .sort((a, b) => a.sort - b.sort)
+    .map(({ value }) => value);
 }
 
 // Questions
