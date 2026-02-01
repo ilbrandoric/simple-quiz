@@ -6,10 +6,14 @@ const nextButton = document.getElementById("next-button");
 const questionContainer = document.getElementById("question-container");
 const answerButtons = document.getElementById("answer-buttons");
 
+const scoreBoard = document.getElementById("scoreboard-container");
+
 // STATE (what situation is the program currently in?)
 
 let shuffledQuestions = [];
 let currentQuestionIndex = 0;
+let score = 0;
+let alreadyAnswered = false;
 
 // Start / Restart buttons
 
@@ -22,12 +26,15 @@ function startGame() {
   // Hides start button once game starts
   startButton.classList.add("hidden");
 
-  // Unhides question & answer buttons
+  // Unhides scoreboard, question & answer buttons
   questionContainer.classList.remove("hidden");
   answerButtons.classList.remove("hidden");
+  scoreBoard.classList.remove('hidden');
 
   // Resets the value so if game is a restart it start 'clean' with no bugs
   currentQuestionIndex = 0;
+  alreadyAnswered = false;
+  score = 0;
 
   // Creates a new array of objects 'shuffledQuestions' does NOT mutate quizQuestions original
   // You shuffle the answer options 'inside' and then the entire question deck is itself shuffled
@@ -42,12 +49,16 @@ function startGame() {
     .sort(() => Math.random() - 0.5);
 
   showQuestion();
+
+  // Displays score
+  totalScore();
 }
 
 // Question logic
 
 function showQuestion() {
   resetState();
+  alreadyAnswered = false;
 
   const currentQuestion = shuffledQuestions[currentQuestionIndex];
   questionContainer.innerText = currentQuestion.question;
@@ -79,11 +90,23 @@ function showNextQuestion() {
 
 // Answer logic
 
+// Only first click on answer is correct and score increases
+// This is the answer the user chose 'e.target' or the button the user clicked
+
 function selectAnswer(e) {
-  // This is the answer the user chose 'e.target' or the button the user clicked
+  //If already answered STOP. Do nothing else
+  if (alreadyAnswered === true) {
+    return;
+  }
+  // Mark question as answered so it cant be used again
+  alreadyAnswered = true;
+
   const selectedButton = e.target;
-  // Is the option correct?
   const isCorrect = selectedButton.dataset.correct === "true";
+
+  if (isCorrect === true) {
+    score++;
+  }
 
   // Color right answer green — even if you clicked wrong answer.
   Array.from(answerButtons.children).forEach((button) => {
@@ -97,6 +120,14 @@ function selectAnswer(e) {
     startButton.innerText = "Restart";
     startButton.classList.remove("hidden");
   }
+
+  totalScore()
+}
+
+// Update score on dashboard
+
+function totalScore() {
+  scoreBoard.textContent = `${score} / ${shuffledQuestions.length} `;
 }
 
 // Clean UI
@@ -124,7 +155,7 @@ function resetState() {
   }
 }
 
-// Shuffler logic
+// Answer shuffler function
 
 function shuffleArray(array) {
   return array

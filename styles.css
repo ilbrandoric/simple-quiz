@@ -29,7 +29,7 @@ body {
 /* Golden rectangle container */
 .container {
   width: 640px;
-  min-height: 396px; 
+  min-height: 396px;
   background-color: #1e1e1e;
   border-radius: 12px;
   padding: 24px;
@@ -39,8 +39,6 @@ body {
   gap: 16px;
   justify-content: flex-start; /* default quiz layout */
 }
-
-
 
 /* Start state: center Start button vertically */
 .container.start-state {
@@ -94,6 +92,11 @@ body {
   margin-top: auto;
 }
 
+/* Scoreboard */
+#scoreboard-container {
+  text-align: right;
+  padding-top: 2%;
+}
 
 /* Center Start button in start state */
 .container.start-state .controls {
@@ -119,10 +122,15 @@ body {
   border: none;
   cursor: pointer;
 }
-
+.controls {
+  display: flex;
+  gap: 12px;
+  margin-top: auto;
+  min-height: 52px; /* reserve space for Next button */
+}
 .controls .btn:hover {
   background-color: #4a4a4a;
-} 
+}
 
 /* Utility */
 .hidden {
