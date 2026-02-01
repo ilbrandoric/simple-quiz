@@ -17,6 +17,11 @@ let alreadyAnswered = false;
 
 // Start / Restart buttons
 
+questionContainer.innerHTML = `
+  <strong>Quizzy</strong><br>
+  Please press Start to begin
+`;
+
 startButton.addEventListener("click", startGame);
 nextButton.addEventListener("click", showNextQuestion);
 
@@ -27,9 +32,8 @@ function startGame() {
   startButton.classList.add("hidden");
 
   // Unhides scoreboard, question & answer buttons
-  questionContainer.classList.remove("hidden");
   answerButtons.classList.remove("hidden");
-  scoreBoard.classList.remove('hidden');
+  scoreBoard.classList.remove("hidden");
 
   // Resets the value so if game is a restart it start 'clean' with no bugs
   currentQuestionIndex = 0;
@@ -113,15 +117,14 @@ function selectAnswer(e) {
     setStatus(button, button.dataset.correct === "true");
   });
 
-  // Are there more questions left in the deck? Yes > Show next.
+  // Are there more questions left in the deck? Yes > Show next else end game
   if (currentQuestionIndex < shuffledQuestions.length - 1) {
     nextButton.classList.remove("hidden");
   } else {
-    startButton.innerText = "Restart";
-    startButton.classList.remove("hidden");
+    endGame();
   }
 
-  totalScore()
+  totalScore();
 }
 
 // Update score on dashboard
@@ -162,6 +165,21 @@ function shuffleArray(array) {
     .map((value) => ({ value, sort: Math.random() }))
     .sort((a, b) => a.sort - b.sort)
     .map(({ value }) => value);
+}
+
+function endGame() {
+  // Clear answers
+  resetState();
+
+  // Show end message
+  questionContainer.innerHTML = `
+    <strong>Question deck complete!</strong><br>
+    Please restart to play again.
+  `;
+
+  // Show restart button
+  startButton.innerText = "Restart";
+  startButton.classList.remove("hidden");
 }
 
 // Questions
