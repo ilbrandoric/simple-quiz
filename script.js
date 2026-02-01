@@ -8,17 +8,22 @@ const answerButtons = document.getElementById("answer-buttons");
 
 const scoreBoard = document.getElementById("scoreboard-container");
 
+const timerElement = document.getElementById("timer-container");
+
 // STATE (what situation is the program currently in?)
 
 let shuffledQuestions = [];
 let currentQuestionIndex = 0;
 let score = 0;
 let alreadyAnswered = false;
+let timeRemaining = 0;
+let timerId = null;
 
 // Start / Restart buttons
 
 questionContainer.innerHTML = `
-  <strong>Quizzy</strong><br>
+  <strong>Quizzy</strong><br><br>
+  You have <em>60 seconds</em> to answer 10 random questions. 
   Please press Start to begin
 `;
 
@@ -31,9 +36,23 @@ function startGame() {
   // Hides start button once game starts
   startButton.classList.add("hidden");
 
-  // Unhides scoreboard, question & answer buttons
+  // Unhides scoreboard, timer, question & answer buttons
   answerButtons.classList.remove("hidden");
-  scoreBoard.classList.remove("hidden");
+  document.querySelector(".hud").classList.remove("hidden");
+
+  timeRemaining = 60;
+  timerElement.classList.remove("hidden");
+  timerElement.innerHTML = "1:00";
+  timerId = setInterval(function () {
+    timeRemaining--;
+    const minutes = Math.floor(timeRemaining / 60);
+    const seconds = timeRemaining % 60;
+    timerElement.innerHTML = `${minutes}:${seconds < 10 ? "0" : ""}${seconds}`; //ensures the seconds always display with two digits.
+    if (timeRemaining <= 0) {
+      clearInterval(timerId);
+      endGame("time-out");
+    }
+  }, 1000);
 
   // Resets the value so if game is a restart it start 'clean' with no bugs
   currentQuestionIndex = 0;
@@ -167,17 +186,26 @@ function shuffleArray(array) {
     .map(({ value }) => value);
 }
 
-function endGame() {
-  // Clear answers
+function endGame(reason) {
   resetState();
 
-  // Show end message
-  questionContainer.innerHTML = `
-    <strong>Question deck complete!</strong><br>
-    Please restart to play again.
-  `;
+  if (timerId !== null) {
+    clearInterval(timerId);
+    timerId = null;
+  }
 
-  // Show restart button
+  if (reason === "time-out") {
+    questionContainer.innerHTML = `
+      <strong>Your time is up!</strong><br>
+      Please restart to try again.
+    `;
+  } else {
+    questionContainer.innerHTML = `
+      <strong>Question deck complete!</strong><br>
+      Please restart to play again.
+    `;
+  }
+
   startButton.innerText = "Restart";
   startButton.classList.remove("hidden");
 }
